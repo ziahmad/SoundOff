@@ -5,8 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoundOff"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="800" Background="#FF704949" >
+
     <Grid>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+
+            <Border BorderThickness="3" CornerRadius="3" Margin="10,10,10,5" BorderBrush="Black" Grid.Row="0" >
+                <local:Oscillator x:Name="oscillator1" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+   
+                </local:Oscillator>
+            </Border>
+            <Border BorderThickness="3" CornerRadius="3" Margin="10,5,10,5" BorderBrush="Black" Grid.Row="1">
+                <local:Oscillator x:Name="oscillator2" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+
+                </local:Oscillator>
+            </Border>
+            <Border BorderThickness="3" CornerRadius="3" Margin="10,5,10,10" BorderBrush="Black" Grid.Row="2">
+                <local:Oscillator x:Name="oscillator3" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+
+                </local:Oscillator>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <local:Visualizer x:Name="Graph"></local:Visualizer>
+
+
+
+        </Grid>
     </Grid>
+    <!--<Grid>
+
+        <Button Name ="StartBut" PreviewMouseLeftButtonDown="OnButtonClick2" PreviewMouseLeftButtonUp="OnButtonClick2" Width="400" Height="50" BorderThickness="3,3,3,3" RenderTransformOrigin="0.685,1.127" HorizontalAlignment="Left" Margin="200,192,0,192"></Button>
+        
+
+        -->
+    <!--<Button Name ="B" Click="OnButtonClick2" Width="400" Height="50" MouseMove="MouseOver" BorderThickness="3,3,3,3" Margin="200,302,200,82"></Button>
+        
+        <Button Name ="C" Click="OnButtonClick3" Width="400" Height="50" MouseMove="MouseOver" BorderThickness="3,3,3,3" Margin="200,247,200,137"></Button>
+        
+        <Button Name ="D" Click="OnButtonClick4" Width="400" Height="50" MouseMove="MouseOver" BorderThickness="3,3,3,3" Margin="200,137,200,247"></Button>-->
+    <!--
+
+    </Grid>-->
 </Window>
