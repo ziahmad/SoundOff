@@ -23,17 +23,17 @@
 
 
             <Border BorderThickness="3" CornerRadius="3" Margin="10,10,10,5" BorderBrush="Black" Grid.Row="0" >
-                <local:Oscillator x:Name="oscillator1" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <local:Oscillator x:Name="oscillator1" Margin="0">
    
                 </local:Oscillator>
             </Border>
             <Border BorderThickness="3" CornerRadius="3" Margin="10,5,10,5" BorderBrush="Black" Grid.Row="1">
-                <local:Oscillator x:Name="oscillator2" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <local:Oscillator x:Name="oscillator2" Margin="0" >
 
                 </local:Oscillator>
             </Border>
             <Border BorderThickness="3" CornerRadius="3" Margin="10,5,10,10" BorderBrush="Black" Grid.Row="2">
-                <local:Oscillator x:Name="oscillator3" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <local:Oscillator x:Name="oscillator3" Margin="0">
 
                 </local:Oscillator>
             </Border>

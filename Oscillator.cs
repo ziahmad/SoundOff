@@ -1,5 +1,7 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,9 +17,17 @@ namespace SoundOff
         static int count = 0;
         private Sound.Waves WaveForm = Sound.Waves.SINE;
         public Button[] bArr = new Button[4];
+        public Slider vel;
+        public Slider PitchShift;
 
 
 
+
+        //if grid doens't extend to bottom of oscillator window, we can add another grid for two sliders
+        // -- volume control
+        // -- pitch control -- may cause warp clicking
+        // we will not have enough time to do differnt modulation types
+        //liekly no time for MIDI control either
         public Oscillator()
         {
             Background = Brushes.Brown;
@@ -33,8 +43,8 @@ namespace SoundOff
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star) });
             grid.Width = this.Width;
             grid.Height = this.Height;
-            grid.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            grid.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            grid.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
+            grid.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
 
 
             Button Sine = new()
@@ -104,10 +114,79 @@ namespace SoundOff
 
             this.AddChild(textBlock);
 
+
+
+            //slider
+            Grid sliderGrid = new Grid();
+            //two col two rows
+            sliderGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
+
+            sliderGrid.ColumnDefinitions.Add(new ColumnDefinition());
+
+            sliderGrid.RowDefinitions.Add(new RowDefinition());
+            sliderGrid.RowDefinitions.Add(new RowDefinition());
+            sliderGrid.Margin = new Thickness(10);
+
+            Label vL = new Label()
+            {
+                FontSize = 12,
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            vL.Content = "Vel";
+            Grid.SetColumn(vL, 0);
+            Grid.SetRow(vL, 0);
+            sliderGrid.Children.Add(vL);
+
+            Label vR = new Label()
+            {
+                FontSize = 12,
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            vR.Content = "Pitch Shift";
+            Grid.SetColumn(vR, 0);
+            Grid.SetRow(vR, 1);
+            sliderGrid.Children.Add(vR);
+
+
+
+            vel = new();
+            //vel.Margin = new Thickness(20, 0, 20, 10);
+            vel.Maximum = 2;
+            vel.Value = 1;
+            vel.Minimum = 0;
+            Grid.SetColumn(vel, 1);
+            Grid.SetRow(vel, 0);
+            sliderGrid.Children.Add(vel);
+
+            PitchShift = new();
+            //PitchShift.Margin = new Thickness(20, 10, 20, 0);
+            PitchShift.Name = "PitchShift";
+            PitchShift.Maximum = 1;
+            PitchShift.Value = 0;
+            PitchShift.Minimum = -1;
+            Grid.SetColumn(PitchShift, 1);
+            Grid.SetRow(PitchShift, 1);
+            sliderGrid.Children.Add(PitchShift);
+
+            sliderGrid.Width = this.Width;
+            sliderGrid.Height = this.Height;
+
+
+
             this.AddChild(grid);
             this.Margin = new Thickness(3);
-            this.Width = 300;
-            this.Height = 400;
+            //this.Width = 300;
+            // this.Height = 400;
+
+
+
+            this.AddChild(sliderGrid);
+
+
 
 
 
