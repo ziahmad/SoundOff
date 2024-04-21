@@ -287,8 +287,12 @@ namespace SoundOff
             Debug.WriteLine("{0}, {1}, {2}", key, freq, vel);
             if (vel == 0)
             {
-
+                
             }
+            if(key>127)
+            {
+                return;
+            }s
             short[] sampleBytes1 = OS1 switch
             {
                 Waves.SINE => LongSineWaveS(freq, vel),
