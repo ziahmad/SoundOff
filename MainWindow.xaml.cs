@@ -22,71 +22,40 @@ public partial class MainWindow : Window
 
 {
 
-    DispatcherTimer myTimer = new();
+    readonly DispatcherTimer myTimer = new();
 
-    public readonly Sound sp = new();
-    const int lineSegments = 300;
+    public readonly Sound sp;
     public MainWindow()
     {
         InitializeComponent();
 
+        sp = new(3);
 
-        foreach (var line in oscillator1.bArr)
-            line.Click += OnButtonClick1;
-        foreach (var line in oscillator2.bArr)
-            line.Click += OnButtonClick2;
-        foreach (var line in oscillator3.bArr)
-            line.Click += OnButtonClick3;
+        sp.AddOscillator(oscillator1);
+        sp.AddOscillator(oscillator2);
+        sp.AddOscillator(oscillator3);
+        //foreach (var line in oscillator1.ButtonArray)
+        //    line.Click += OnButtonClick1;
+        //foreach (var line in oscillator2.ButtonArray)
+        //    line.Click += OnButtonClick2;
+        //foreach (var line in oscillator3.ButtonArray)
+        //    line.Click += OnButtonClick3;
 
-        oscillator1.vel.ValueChanged += Vel_ValueChanged1;
-        oscillator1.PitchShift.ValueChanged += PitchShift_ValueChanged1;
-        oscillator2.vel.ValueChanged += Vel_ValueChanged2;
-        oscillator2.PitchShift.ValueChanged += PitchShift_ValueChanged2;
-        oscillator3.vel.ValueChanged += Vel_ValueChanged3;
-        oscillator3.PitchShift.ValueChanged += PitchShift_ValueChanged3;
+
 
         this.KeyDown += OnKeyDown;
         this.KeyUp += OnKeyUp;
 
-        myTimer.Tick += Graph.CDr2;
+        myTimer.Tick += Graph.DrawLines;
         myTimer.Interval = new(10);
         myTimer.Start();
     }
 
-    private void PitchShift_ValueChanged3(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        sp.Os3P = e.NewValue;
-    }
-
-    private void Vel_ValueChanged3(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        sp.Os3V = e.NewValue;
-    }
-
-    private void PitchShift_ValueChanged2(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        sp.Os2P = e.NewValue;
-    }
-
-    private void Vel_ValueChanged2(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        sp.Os2V = e.NewValue;
-    }
-
-    private void PitchShift_ValueChanged1(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        sp.Os1P = e.NewValue;
-    }
-
-    private void Vel_ValueChanged1(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        sp.Os1V = e.NewValue;
-    }
 
     private Key currentKey;
 
     int octaveShift = 0;
-    int octiveSize = 12;
+    const int octiveSize = 12;
     int velocity = 70;
     bool shiftDown = false;
 
@@ -212,25 +181,24 @@ public partial class MainWindow : Window
     //middle C is 60 MIDI
     //KEY VELOCITY
 
-    static int indexer = 0;
-    void OnButtonClick1(object sender, RoutedEventArgs a)
-    {
-        sp.OS1 = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
+    //void OnButtonClick1(object sender, RoutedEventArgs a)
+    //{
+    //    sp.OS1 = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
 
 
-    }
-    void OnButtonClick2(object sender, RoutedEventArgs a)
-    {
-        sp.OS2 = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
+    //}
+    //void OnButtonClick2(object sender, RoutedEventArgs a)
+    //{
+    //    sp.OS2 = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
 
 
 
-    }
-    void OnButtonClick3(object sender, RoutedEventArgs a)
-    {
-        sp.OS3 = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
+    //}
+    //void OnButtonClick3(object sender, RoutedEventArgs a)
+    //{
+    //    sp.OS3 = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
 
-    }
+    //}
 
 
 }

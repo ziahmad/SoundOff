@@ -15,10 +15,19 @@ namespace SoundOff
     public class Oscillator : ItemsControl
     {
         static int count = 0;
-        private Sound.Waves WaveForm = Sound.Waves.SINE;
-        public Button[] bArr = new Button[4];
-        public Slider vel;
-        public Slider PitchShift;
+        public Sound.Waves WaveForm
+        {
+            get; private set;
+        } = Sound.Waves.SINE;
+        public Button[] ButtonArray
+        {
+            get;
+        } = new Button[4];
+
+        private Sound? sp;
+        public double Vel { get; private set; } = 1;
+        public double PitchShift { get; private set; } = 0;
+
 
 
 
@@ -31,18 +40,14 @@ namespace SoundOff
         public Oscillator()
         {
             Background = Brushes.Brown;
-            if (count >= 3)
-            {
-                count = 0;
-            }
             count++;
             Grid grid = new();
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star) });
-            grid.Width = this.Width;
-            grid.Height = this.Height;
+            grid.Width = Width;
+            grid.Height = Height;
             grid.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
             grid.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
 
@@ -57,7 +62,7 @@ namespace SoundOff
                 Height = 30
 
             };
-            bArr[0] = Sine;
+            ButtonArray[0] = Sine;
 
             Button Sqr = new()
             {
@@ -68,7 +73,7 @@ namespace SoundOff
                 Height = 30,
 
             };
-            bArr[1] = Sqr; ;
+            ButtonArray[1] = Sqr; ;
 
             Button Tri = new()
             {
@@ -79,7 +84,7 @@ namespace SoundOff
                 Height = 30,
 
             };
-            bArr[2] = Tri;
+            ButtonArray[2] = Tri;
 
             Button Noise = new()
             {
@@ -90,15 +95,15 @@ namespace SoundOff
                 Height = 30,
 
             };
-            bArr[3] = Noise;
+            ButtonArray[3] = Noise;
 
-            for (int i = 0; i < bArr.Length; i++)
+            for (int i = 0; i < ButtonArray.Length; i++)
             {
-                Grid.SetColumn(bArr[i], i);
-                bArr[i].Click += WaveButtonDown;
-                grid.Children.Add(bArr[i]);
-                if (bArr[i].Background != Brushes.Yellow)
-                    bArr[i].Background = Brushes.LightGray;
+                Grid.SetColumn(ButtonArray[i], i);
+                ButtonArray[i].Click += WaveButtonDown;
+                grid.Children.Add(ButtonArray[i]);
+                if (ButtonArray[i].Background != Brushes.Yellow)
+                    ButtonArray[i].Background = Brushes.LightGray;
             }
 
 
@@ -117,57 +122,57 @@ namespace SoundOff
 
 
             //slider
-            Grid sliderGrid = new Grid();
-            //two col two rows
+            Grid sliderGrid = new();
             sliderGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
-
             sliderGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
             sliderGrid.RowDefinitions.Add(new RowDefinition());
             sliderGrid.RowDefinitions.Add(new RowDefinition());
             sliderGrid.Margin = new Thickness(10);
 
-            Label vL = new Label()
+            Label vL = new()
             {
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Content = "Vel",
             };
-            vL.Content = "Vel";
             Grid.SetColumn(vL, 0);
             Grid.SetRow(vL, 0);
             sliderGrid.Children.Add(vL);
 
-            Label vR = new Label()
+
+            Label vR = new()
             {
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Content = "Pitch Shift",
             };
-            vR.Content = "Pitch Shift";
             Grid.SetColumn(vR, 0);
             Grid.SetRow(vR, 1);
             sliderGrid.Children.Add(vR);
 
 
 
-            vel = new();
-            //vel.Margin = new Thickness(20, 0, 20, 10);
-            vel.Maximum = 2;
-            vel.Value = 1;
-            vel.Minimum = 0;
+            Slider vel = new()
+            {
+                Maximum = 2,
+                Value = 1,
+                Minimum = 0
+            };
             Grid.SetColumn(vel, 1);
             Grid.SetRow(vel, 0);
             sliderGrid.Children.Add(vel);
 
-            PitchShift = new();
-            //PitchShift.Margin = new Thickness(20, 10, 20, 0);
-            PitchShift.Name = "PitchShift";
-            PitchShift.Maximum = 1;
-            PitchShift.Value = 0;
-            PitchShift.Minimum = -1;
+            Slider PitchShift = new()
+            {
+                Maximum = 1,
+                Value = 0,
+                Minimum = -1
+            };
             Grid.SetColumn(PitchShift, 1);
             Grid.SetRow(PitchShift, 1);
             sliderGrid.Children.Add(PitchShift);
@@ -175,12 +180,14 @@ namespace SoundOff
             sliderGrid.Width = this.Width;
             sliderGrid.Height = this.Height;
 
+            PitchShift.ValueChanged += PitchSliderMove;
+            vel.ValueChanged += VelSliderMove;
+
+
 
 
             this.AddChild(grid);
             this.Margin = new Thickness(3);
-            //this.Width = 300;
-            // this.Height = 400;
 
 
 
@@ -189,20 +196,37 @@ namespace SoundOff
 
 
 
+        }
 
+        public void AddSoundSystem(Sound ssys)
+        {
+            sp = ssys;
+        }
 
-
-
-
+        void OnButtonClick(object sender, RoutedEventArgs a)
+        {
+            WaveForm = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
 
         }
+
+        private void VelSliderMove(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Vel = e.NewValue;
+
+        }
+
+        private void PitchSliderMove(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            PitchShift = e.NewValue;
+        }
+
 
         private void WaveButtonDown(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
-            this.WaveForm = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), b.Name.ToUpper());
+            WaveForm = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), b.Name.ToUpper());
             //MessageBox.Show(b.Name);
-            foreach (var item in bArr)
+            foreach (var item in ButtonArray)
             {
                 if (item.Name != b.Name)
                     item.Background = Brushes.LightGray;
