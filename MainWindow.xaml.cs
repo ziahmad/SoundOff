@@ -12,6 +12,7 @@ using System.Media;
 using System.IO;
 using System.Diagnostics;
 using System.Windows.Automation.Provider;
+using System.Windows.Threading;
 namespace SoundOff;
 
 /// <summary>
@@ -20,7 +21,10 @@ namespace SoundOff;
 public partial class MainWindow : Window
 
 {
-    private readonly Sound sp = new();
+
+    DispatcherTimer myTimer = new();
+
+    public readonly Sound sp = new();
     const int lineSegments = 300;
     public MainWindow()
     {
@@ -43,6 +47,10 @@ public partial class MainWindow : Window
 
         this.KeyDown += OnKeyDown;
         this.KeyUp += OnKeyUp;
+
+        myTimer.Tick += Graph.CDr2;
+        myTimer.Interval = new(10);
+        myTimer.Start();
     }
 
     private void PitchShift_ValueChanged3(object sender, RoutedPropertyChangedEventArgs<double> e)

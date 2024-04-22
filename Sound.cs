@@ -10,6 +10,8 @@ using System.Security.Cryptography.Pkcs;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
+using NAudio.Wave;
+
 
 namespace SoundOff
 {
@@ -29,6 +31,20 @@ namespace SoundOff
         float KeyToFreq(int K)
         {
             return 400f * (float)Math.Pow(2f, (K - 69) / 12f);
+
+        }
+
+        byte[] o = new byte[2];
+        public short getCurrentSampleValue()
+        {
+            if (SPlayer.Stream == null)
+                return 0;
+            long pos = SPlayer.Stream.Position;
+            //Debug.Write(SPlayer.Stream.CanRead.ToString());
+            SPlayer.Stream.Position = pos;
+            short oo = (short)(((short)o[0]) << 8 + o[1]);
+            return 10;//oo;
+
         }
 
         //NOTE TO SELF

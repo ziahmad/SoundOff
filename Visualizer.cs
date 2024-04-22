@@ -43,13 +43,13 @@ namespace SoundOff
             int width = (int)b.ActualWidth;
             int seglength = (int)width / lineSegments;
 
-            PointCollection polylineSegment = new(lineSegments);
+            polylineSegment = new(lineSegments);
             for (int i = 0; i < width; i += seglength)
             {
                 polylineSegment.Add(new(i, centerY));
             }
 
-            Polyline polyline = new();
+            polyline = new();
             polyline.Points = polylineSegment;
 
             Debug.WriteLine("{0},{1}", b.Width, polyline.Width);
@@ -58,6 +58,44 @@ namespace SoundOff
             polyline.StrokeThickness = 2;
 
             b.Child = polyline;
+
+        }
+        Random random = new Random();
+        PointCollection polylineSegment = new(lineSegments);
+        Polyline polyline = new();
+        public void CDr2(object? sender, EventArgs e)
+        {
+            MainWindow mw = ((MainWindow)((Grid)((Grid)Parent).Parent).Parent);
+            polylineSegment.Clear();
+            if (sender == null) return;
+
+            int centerY = (int)this.ActualHeight / 2;
+            //int width = (int)Visualizer.ActualWidth;
+            int width = (int)this.ActualWidth;
+            int seglength = (int)width / lineSegments;
+            if (seglength <= 0)
+            {
+                seglength = 1;
+
+            }
+
+            short h=0;
+            for (int i = 0; i < width; i += seglength)
+            {
+               // h = mw.sp.getCurrentSampleValue();
+                //Debug.Write(h.ToString());
+                polylineSegment.Add(new(i, centerY+(h/short.MaxValue*(this.ActualHeight/2-10))));
+            }
+
+            polyline.Points = polylineSegment;
+
+            //Debug.WriteLine("{0},{1}", b.Width, polyline.Width);
+
+            polyline.Stroke = Brushes.Black;
+            polyline.StrokeThickness = 2;
+            
+
+            this.Child = polyline;
 
         }
 
