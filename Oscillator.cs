@@ -158,6 +158,7 @@ namespace SoundOff
 
             Slider vel = new()
             {
+                IsTabStop = false,
                 Maximum = 2,
                 Value = 1,
                 Minimum = 0,
@@ -169,12 +170,14 @@ namespace SoundOff
 
             Slider PitchShift = new()
             {
+                IsTabStop = false,
                 Maximum = 1,
                 Value = 0,
                 Minimum = -1,
-                TickFrequency = 2.0 / 24,
+                //TickFrequency = 2.0 / (24*2),
                 TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight,
-                IsSnapToTickEnabled = true,
+                //IsSnapToTickEnabled = true,
+                
             };
             
             Grid.SetColumn(PitchShift, 1);

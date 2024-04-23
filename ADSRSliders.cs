@@ -58,6 +58,7 @@ namespace SoundOff
             Children.Add(Attack);
             A = new()
             {
+                IsTabStop = false,
                 Minimum = 0,
                 Value = 0.01,
                 Maximum = 2,
@@ -82,6 +83,7 @@ namespace SoundOff
             Children.Add(Attack_Peak);
             A_a = new()
             {
+                IsTabStop = false,
                 Minimum = 0,
                 Value = 1.0,
                 Maximum = 1,
@@ -106,6 +108,7 @@ namespace SoundOff
             Children.Add(Decay);
             D = new()
             {
+                IsTabStop = false,
                 Minimum = 0,
                 Value = 0.01,
                 Maximum = 2,
@@ -130,6 +133,7 @@ namespace SoundOff
             Children.Add(Sustain);
             S = new()
             {
+                IsTabStop = false,
                 Minimum = 0,
                 Value = 0.8,
                 Maximum = 1,
@@ -154,6 +158,7 @@ namespace SoundOff
             Children.Add(Release);
             R = new()
             {
+
                 Minimum = 0,
                 Value = 0.2,
                 Maximum = 2,
