@@ -13,6 +13,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows.Automation.Provider;
 using System.Windows.Threading;
+using NAudio.Wave;
 namespace SoundOff;
 
 /// <summary>
@@ -22,6 +23,9 @@ public partial class MainWindow : Window
 
 {
 
+
+
+
     readonly DispatcherTimer myTimer = new();
 
     public readonly Sound sp;
@@ -29,27 +33,30 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        sp = new(3);
+
+
+        sp = new(3, 1000, 0.0);
 
         sp.AddOscillator(oscillator1);
         sp.AddOscillator(oscillator2);
         sp.AddOscillator(oscillator3);
-        //foreach (var line in oscillator1.ButtonArray)
-        //    line.Click += OnButtonClick1;
-        //foreach (var line in oscillator2.ButtonArray)
-        //    line.Click += OnButtonClick2;
-        //foreach (var line in oscillator3.ButtonArray)
-        //    line.Click += OnButtonClick3;
 
 
 
-        this.KeyDown += OnKeyDown;
-        this.KeyUp += OnKeyUp;
+        KeyDown += OnKeyDown;
+        KeyUp += OnKeyUp;
 
+        Graph.SetSoundPlayer(sp);
+        myTimer.Interval = new(0, 0, 0, 0, Graph.updateMS);
         myTimer.Tick += Graph.DrawLines;
-        myTimer.Interval = new(10);
         myTimer.Start();
+
+        ASDREnvelope.AddSoundPlayer(sp);
+
     }
+
+
+
 
 
     private Key currentKey;
@@ -98,66 +105,83 @@ public partial class MainWindow : Window
             }
             return;
         }
-        if (e.Key == currentKey && !sp.OverPercentDone(.8f))
+        if (e.Key == currentKey)
         {
             return;
         }
-        currentKey = e.Key;
         switch (e.Key)
         {
             case Key.A:
                 sp.PlaySound(60 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.W:
                 sp.PlaySound(61 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.S:
                 sp.PlaySound(62 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.E:
                 sp.PlaySound(63 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.D:
                 sp.PlaySound(64 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.F:
                 sp.PlaySound(65 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.T:
                 sp.PlaySound(66 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.G:
                 sp.PlaySound(67 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.Y:
                 sp.PlaySound(68 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.H:
                 sp.PlaySound(69 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.U:
                 sp.PlaySound(70 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.J:
                 sp.PlaySound(71 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.K:
                 sp.PlaySound(72 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.O:
                 sp.PlaySound(73 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.L:
                 sp.PlaySound(74 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.P:
                 sp.PlaySound(75 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
             case Key.OemSemicolon:
                 sp.PlaySound(76 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
-            case Key.OemComma:
+            case Key.OemQuotes:
                 sp.PlaySound(77 + (octaveShift * octiveSize), velocity);
+                currentKey = e.Key;
                 break;
         }
     }
@@ -169,6 +193,7 @@ public partial class MainWindow : Window
         }
         if (e.Key == currentKey)
         {
+            currentKey = Key.None;
             sp.StopSound();
         }
     }

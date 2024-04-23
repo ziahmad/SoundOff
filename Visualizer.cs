@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,12 +14,18 @@ namespace SoundOff
 {
     public class Visualizer : Border
     {
-        const int lineSegments = 300;
-        PointCollection polylineSegment = new(lineSegments);
-        Polyline polyline = new();
+        readonly int lineSegments = 441;
+        readonly PointCollection polylineSegment;
+        readonly Polyline polyline = new();
+        Sound? soundPlayer;
+
+        public int updateMS = 10;
 
         public Visualizer()
         {
+            polylineSegment = new(lineSegments);
+
+            
 
             Margin = new System.Windows.Thickness(0, 10, 10, 10);
             BorderThickness = new System.Windows.Thickness(3);
@@ -33,37 +40,49 @@ namespace SoundOff
 
 
         }
+        public void SetSoundPlayer(Sound player)
+        {
+            soundPlayer = player;
+        }
 
 
 
         public void DrawLines(object? sender, EventArgs e)
         {
-            polylineSegment.Clear();
-            if (sender == null) return;
 
+            polylineSegment.Clear();
             int centerY = (int)this.ActualHeight / 2;
             //int width = (int)Visualizer.ActualWidth;
-            int width = (int)this.ActualWidth;
-            int seglength = (int)width / lineSegments;
-            if (seglength <= 0)
+            double width = this.ActualWidth;
+            double seglength = width / lineSegments;
+
+            double Sampeljump = (Sound.SampleQueueBufferLength * ( (double)updateMS/1000)) / lineSegments;
+
+            Sound sp;
+            if (soundPlayer != null)
             {
-                seglength = 1;
-
+                sp = soundPlayer;
             }
+            else return;
 
-            short h=0;
-            for (int i = 0; i < width; i += seglength)
-            {;
-                polylineSegment.Add(new(i, centerY+(h/short.MaxValue*(this.ActualHeight/2-10))));
+            short h = 0;
+            for (int i = 0; i <= lineSegments; i++)
+            {
+                for(int j = 0; j< Sampeljump; j++)
+                h = sp.CurrentSample;
+                
+
+                polylineSegment.Add(new(i*seglength, centerY + ((double)h / short.MaxValue * (this.ActualHeight / 2 - 10))));
+
             }
 
             polyline.Points = polylineSegment;
 
             polyline.Stroke = Brushes.Black;
             polyline.StrokeThickness = 2;
-            
 
-            this.Child = polyline;
+            
+            Child = polyline;
 
         }
 

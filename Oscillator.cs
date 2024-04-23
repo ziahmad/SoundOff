@@ -24,7 +24,6 @@ namespace SoundOff
             get;
         } = new Button[4];
 
-        private Sound? sp;
         public double Vel { get; private set; } = 1;
         public double PitchShift { get; private set; } = 0;
 
@@ -177,8 +176,8 @@ namespace SoundOff
             Grid.SetRow(PitchShift, 1);
             sliderGrid.Children.Add(PitchShift);
 
-            sliderGrid.Width = this.Width;
-            sliderGrid.Height = this.Height;
+            sliderGrid.Width = Width;
+            sliderGrid.Height =Height;
 
             PitchShift.ValueChanged += PitchSliderMove;
             vel.ValueChanged += VelSliderMove;
@@ -186,22 +185,18 @@ namespace SoundOff
 
 
 
-            this.AddChild(grid);
-            this.Margin = new Thickness(3);
+            AddChild(grid);
+            Margin = new Thickness(3);
 
 
 
-            this.AddChild(sliderGrid);
+            AddChild(sliderGrid);
 
 
 
 
         }
 
-        public void AddSoundSystem(Sound ssys)
-        {
-            sp = ssys;
-        }
 
         void OnButtonClick(object sender, RoutedEventArgs a)
         {

@@ -24,7 +24,7 @@
 
             <Border BorderThickness="3" CornerRadius="3" Margin="10,10,10,5" BorderBrush="Black" Grid.Row="0" >
                 <local:Oscillator x:Name="oscillator1" Margin="0">
-   
+
                 </local:Oscillator>
             </Border>
             <Border BorderThickness="3" CornerRadius="3" Margin="10,5,10,5" BorderBrush="Black" Grid.Row="1">
@@ -45,7 +45,7 @@
             </Grid.RowDefinitions>
 
             <local:Visualizer x:Name="Graph"></local:Visualizer>
-
+            <local:ADSRSliders x:Name="ASDREnvelope" Margin="0,0,10,0" Grid.Row="1"/>
 
 
         </Grid>
