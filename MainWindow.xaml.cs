@@ -65,7 +65,7 @@ public partial class MainWindow : Window
 
         else
         {
-            MessageBox.Show("No Midi Revice Detected", "You can still use the keyboard to play notes");
+            MessageBox.Show("You can still use the keyboard to play notes.\nTo use a Midi Device, plug one in and restart the process","No Midi Revice Detected");
         }
 
     }
