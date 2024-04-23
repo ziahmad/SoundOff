@@ -302,7 +302,8 @@ namespace SoundOff
         private static readonly char[] RIFFHeader = ['R', 'I', 'F', 'F'];
         private static readonly char[] FormatHeader = ['W', 'A', 'V', 'E', 'f', 'm', 't', ' '];
 
-        static short[] MakeWave(float freq, float vel, Waves type)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
+        private static short[] MakeWave(float freq, float vel, Waves type)
         {
             short[] samples = new short[SampleRate];
             for (int i = 0; i < SampleRate; i++)
@@ -315,9 +316,9 @@ namespace SoundOff
 
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
         private static MemoryStream LongMakeWav(float freq, byte[] sampleBytes)
-#pragma warning restore IDE0060 // Remove unused parameter
         {
             MemoryStream ms;
             BinaryWriter bw;
