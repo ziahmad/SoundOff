@@ -50,6 +50,7 @@ namespace SoundOff
                 foreach (Oscillator os in OSInfo)
                 {
                     double sine = EnvelopeRamp(time) * OscillatorVelocityShift(Amplitude, os) * WaveTypes[(int)os.WaveForm](2 * Math.PI * (Freqency + OscilatorFrequencyOffSet(Freqency, os)) * time);
+                    
                     io += (short)Math.Round(sine * (Math.Pow(2, 15) - 1));
                 }
                 time += 1.0 / SampleRate;
@@ -69,8 +70,11 @@ namespace SoundOff
                 }
 
             }
+            Debug.WriteLine("{0},{1},{2}", (Freqency + OscilatorFrequencyOffSet(Freqency, OSInfo[0])), OscilatorFrequencyOffSet(Freqency, OSInfo[0]), OSInfo[0].PitchShift);
             return count;
         }
+
+        
 
 
 
@@ -257,7 +261,7 @@ namespace SoundOff
 
         private static double Triangle(double x)
         {
-            return Math.Abs((x % 4) - 2) - 1;
+            return Math.Asin(Math.Sin(x)) * 2/Math.PI;
         }
 
         static readonly Random random = new();
@@ -269,7 +273,7 @@ namespace SoundOff
         private static double OscilatorFrequencyOffSet(double basefreq, Oscillator os)
         {
 
-            return os.PitchShift >= 0 ? basefreq * (os.PitchShift * 2) : basefreq / (os.PitchShift * 2);
+            return os.PitchShift >= 0 ? basefreq * (os.PitchShift) : basefreq /2* (os.PitchShift);
 
         }
 

@@ -160,7 +160,8 @@ namespace SoundOff
             {
                 Maximum = 2,
                 Value = 1,
-                Minimum = 0
+                Minimum = 0,
+
             };
             Grid.SetColumn(vel, 1);
             Grid.SetRow(vel, 0);
@@ -170,8 +171,12 @@ namespace SoundOff
             {
                 Maximum = 1,
                 Value = 0,
-                Minimum = -1
+                Minimum = -1,
+                TickFrequency = 2.0 / 24,
+                TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight,
+                IsSnapToTickEnabled = true,
             };
+            
             Grid.SetColumn(PitchShift, 1);
             Grid.SetRow(PitchShift, 1);
             sliderGrid.Children.Add(PitchShift);
