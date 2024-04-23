@@ -49,7 +49,8 @@ namespace SoundOff
                 Content = "Attack",
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = new Thickness(0, 0, 10, 0),
 
             };
@@ -62,6 +63,8 @@ namespace SoundOff
                 Minimum = 0,
                 Value = 0.01,
                 Maximum = 2,
+                VerticalAlignment = VerticalAlignment.Center,
+
             };
             A.ValueChanged += Attack_ValueChanged;
             SetColumn(A, 1);
@@ -74,7 +77,8 @@ namespace SoundOff
                 Content = "Attack Peak",
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = new Thickness(0, 0, 10, 0),
 
             };
@@ -87,6 +91,7 @@ namespace SoundOff
                 Minimum = 0,
                 Value = 1.0,
                 Maximum = 1,
+                VerticalAlignment = VerticalAlignment.Center,
             };
             A_a.ValueChanged += Attack_Amplitude_ValueChanged;
             SetColumn(A_a, 1);
@@ -99,7 +104,8 @@ namespace SoundOff
                 Content = "Decay",
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = new Thickness(0, 0, 10, 0),
 
             };
@@ -112,6 +118,7 @@ namespace SoundOff
                 Minimum = 0,
                 Value = 0.01,
                 Maximum = 2,
+                VerticalAlignment = VerticalAlignment.Center,
             };
             D.ValueChanged += Decay_ValueChanged;
             SetColumn(D, 1);
@@ -124,7 +131,8 @@ namespace SoundOff
                 Content = "Sustain",
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = new Thickness(0, 0, 10, 0),
 
             };
@@ -137,6 +145,7 @@ namespace SoundOff
                 Minimum = 0,
                 Value = 0.8,
                 Maximum = 1,
+                VerticalAlignment = VerticalAlignment.Center,
             };
             S.ValueChanged += Sustain_ValueChanged;
             SetColumn(S, 1);
@@ -149,7 +158,8 @@ namespace SoundOff
                 Content = "Release",
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
-                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = new Thickness(0, 0, 10, 0),
 
             };
@@ -162,6 +172,7 @@ namespace SoundOff
                 Minimum = 0,
                 Value = 0.2,
                 Maximum = 2,
+                VerticalAlignment = VerticalAlignment.Center,
             };
             R.ValueChanged += Release_ValueChanged;
             SetColumn(R, 1);
