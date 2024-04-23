@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,11 @@ namespace SoundOff
     public class ADSRSliders : Grid
     {
 
-        Slider A;
-        Slider A_a;
-        Slider D;
-        Slider S;
-        Slider R;
+        readonly Slider A;
+        readonly Slider A_a;
+        readonly Slider D;
+        readonly Slider S;
+        readonly Slider R;
 
         public ADSRSliders()
         {
@@ -61,7 +62,7 @@ namespace SoundOff
                 Value = 0.01,
                 Maximum = 2,
             };
-            A.ValueChanged += A_ValueChanged;
+            A.ValueChanged += Attack_ValueChanged;
             SetColumn(A, 1);
             SetRow(A, 0);
             Children.Add(A);
@@ -85,7 +86,7 @@ namespace SoundOff
                 Value = 1.0,
                 Maximum = 1,
             };
-            A_a.ValueChanged += A_a_ValueChanged;
+            A_a.ValueChanged += Attack_Amplitude_ValueChanged;
             SetColumn(A_a, 1);
             SetRow(A_a, 1);
             Children.Add(A_a);
@@ -109,7 +110,7 @@ namespace SoundOff
                 Value = 0.01,
                 Maximum = 2,
             };
-            D.ValueChanged += D_ValueChanged;
+            D.ValueChanged += Decay_ValueChanged;
             SetColumn(D, 1);
             SetRow(D, 2);
             Children.Add(D);
@@ -133,7 +134,7 @@ namespace SoundOff
                 Value = 0.8,
                 Maximum = 1,
             };
-            S.ValueChanged += S_ValueChanged;
+            S.ValueChanged += Sustain_ValueChanged;
             SetColumn(S, 1);
             SetRow(S, 3);
             Children.Add(S);
@@ -157,38 +158,48 @@ namespace SoundOff
                 Value = 0.2,
                 Maximum = 2,
             };
-            R.ValueChanged += R_ValueChanged;
+            R.ValueChanged += Release_ValueChanged;
             SetColumn(R, 1);
             SetRow(R, 4);
             Children.Add(R);
 
         }
 
-        private void A_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Attack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            Debug.Assert(sp != null);
+
             sp.env.Attack_t = e.NewValue;
         }
 
-        private void A_a_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Attack_Amplitude_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            Debug.Assert(sp != null);
+
             sp.env.Attack_A = e.NewValue;
         }
 
-        private void D_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Decay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            Debug.Assert(sp != null);
+
             sp.env.Decay_t = e.NewValue;
         }
 
-        private void S_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Sustain_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            Debug.Assert(sp != null);
+
             sp.env.Sustain_A = e.NewValue;
         }
-        private void R_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Release_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            Debug.Assert(sp != null);
+
             sp.env.Release_t = e.NewValue;
         }
 
-        Sound sp;
+        Sound? sp;
         public void AddSoundPlayer(Sound sp)
         {
             this.sp = sp;

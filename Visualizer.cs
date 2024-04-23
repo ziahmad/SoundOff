@@ -35,7 +35,7 @@ namespace SoundOff
 
 
 
-            this.Loaded += DrawLines;
+            Loaded += DrawLines;
 
 
 
@@ -51,9 +51,9 @@ namespace SoundOff
         {
 
             polylineSegment.Clear();
-            int centerY = (int)this.ActualHeight / 2;
+            int centerY = (int)ActualHeight / 2;
             //int width = (int)Visualizer.ActualWidth;
-            double width = this.ActualWidth;
+            double width = ActualWidth;
             double seglength = width / lineSegments;
 
             double Sampeljump = (Sound.SampleQueueBufferLength * ( (double)updateMS/1000)) / lineSegments;
@@ -72,7 +72,7 @@ namespace SoundOff
                 h = sp.CurrentSample;
                 
 
-                polylineSegment.Add(new(i*seglength, centerY + ((double)h / short.MaxValue * (this.ActualHeight / 2 - 10))));
+                polylineSegment.Add(new(i*seglength, centerY + ((double)h / short.MaxValue * (ActualHeight / 2 - 10))));
 
             }
 

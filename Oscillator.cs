@@ -116,7 +116,7 @@ namespace SoundOff
             };
 
 
-            this.AddChild(textBlock);
+            AddChild(textBlock);
 
 
 
