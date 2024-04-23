@@ -13,7 +13,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows.Automation.Provider;
 using System.Windows.Threading;
-using NAudio.Wave;
+using NAudio.Midi;
 namespace SoundOff;
 
 /// <summary>
@@ -24,7 +24,7 @@ public partial class MainWindow : Window
 {
 
 
-
+    MidiIn midiIn;
 
     readonly DispatcherTimer myTimer = new();
 
@@ -53,11 +53,45 @@ public partial class MainWindow : Window
 
         ASDREnvelope.AddSoundPlayer(sp);
 
+
+
+        if (MidiIn.NumberOfDevices > 0)
+        {
+            midiIn = new MidiIn(0);
+            midiIn.MessageReceived += MidiIn_MessageReceived;
+            midiIn.ErrorReceived += (o, e) => Debug.WriteLine(e);
+            midiIn.Start();
+        }
+
+        else
+        {
+            MessageBox.Show("No Midi Revice Detected", "You can still use the keyboard to play notes");
+        }
+
     }
 
 
-
-
+    private int CurrentMidiNote;
+    private void MidiIn_MessageReceived(object? sender, MidiInMessageEventArgs e)
+    {
+        //Debug.WriteLine("T:{0}, M:{1},E{2}", e.Timestamp, e.RawMessage, e.MidiEvent);
+        if (MidiEvent.IsNoteOn(e.MidiEvent))
+        {
+            if (((NoteOnEvent)e.MidiEvent).Velocity != 0)
+            {
+                CurrentMidiNote = ((NoteOnEvent)e.MidiEvent).NoteNumber;
+                sp.PlaySound(((NoteOnEvent)e.MidiEvent).NoteNumber, ((NoteOnEvent)e.MidiEvent).Velocity);
+            }
+            else if (CurrentMidiNote == ((NoteOnEvent)e.MidiEvent).NoteNumber)
+            {
+                sp.StopSound();
+            }
+        }
+        else if (MidiEvent.IsNoteOff(e.MidiEvent)&& (CurrentMidiNote == ((NoteEvent)e.MidiEvent).NoteNumber))
+        {
+            sp.StopSound();
+        }
+    }
 
     private Key currentKey;
 
