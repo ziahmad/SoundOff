@@ -87,7 +87,7 @@ public partial class MainWindow : Window
                 sp.StopSound();
             }
         }
-        else if (MidiEvent.IsNoteOff(e.MidiEvent)&& (CurrentMidiNote == ((NoteEvent)e.MidiEvent).NoteNumber))
+        else if (MidiEvent.IsNoteOff(e.MidiEvent) && (CurrentMidiNote == ((NoteEvent)e.MidiEvent).NoteNumber))
         {
             sp.StopSound();
         }
@@ -100,6 +100,8 @@ public partial class MainWindow : Window
     int velocity = 70;
     bool shiftDown = false;
 
+
+    int playKey = 128;
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Z || e.Key == Key.X || e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.LeftShift || e.Key == Key.RightShift)
@@ -146,78 +148,66 @@ public partial class MainWindow : Window
         switch (e.Key)
         {
             case Key.A:
-                sp.PlaySound(60 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 60 + (octaveShift * octiveSize);
                 break;
             case Key.W:
-                sp.PlaySound(61 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 61 + (octaveShift * octiveSize);
                 break;
             case Key.S:
-                sp.PlaySound(62 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 62 + (octaveShift * octiveSize);
                 break;
             case Key.E:
-                sp.PlaySound(63 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 63 + (octaveShift * octiveSize);
                 break;
             case Key.D:
-                sp.PlaySound(64 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 64 + (octaveShift * octiveSize);
                 break;
             case Key.F:
-                sp.PlaySound(65 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 65 + (octaveShift * octiveSize);
                 break;
             case Key.T:
-                sp.PlaySound(66 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 66 + (octaveShift * octiveSize);
                 break;
             case Key.G:
-                sp.PlaySound(67 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 67 + (octaveShift * octiveSize);
                 break;
             case Key.Y:
-                sp.PlaySound(68 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 68 + (octaveShift * octiveSize);
                 break;
             case Key.H:
-                sp.PlaySound(69 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 69 + (octaveShift * octiveSize);
                 break;
             case Key.U:
-                sp.PlaySound(70 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 70 + (octaveShift * octiveSize);
                 break;
             case Key.J:
-                sp.PlaySound(71 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 71 + (octaveShift * octiveSize);
                 break;
             case Key.K:
-                sp.PlaySound(72 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 72 + (octaveShift * octiveSize);
                 break;
             case Key.O:
-                sp.PlaySound(73 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 73 + (octaveShift * octiveSize);
                 break;
             case Key.L:
-                sp.PlaySound(74 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 74 + (octaveShift * octiveSize);
                 break;
             case Key.P:
-                sp.PlaySound(75 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 75 + (octaveShift * octiveSize);
                 break;
             case Key.OemSemicolon:
-                sp.PlaySound(76 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 76 + (octaveShift * octiveSize);
                 break;
             case Key.OemQuotes:
-                sp.PlaySound(77 + (octaveShift * octiveSize), velocity);
-                currentKey = e.Key;
+                playKey = 77 + (octaveShift * octiveSize);
                 break;
+            default:
+                return;
         }
+        if (playKey > 127)
+            return;
+        sp.PlaySound(playKey, velocity);
+        currentKey = e.Key;
     }
     private void OnKeyUp(object sender, KeyEventArgs e)
     {
