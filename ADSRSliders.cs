@@ -13,26 +13,29 @@ namespace SoundOff
     public class ADSRSliders : Grid
     {
 
-        readonly Slider A;
-        readonly Slider A_a;
-        readonly Slider D;
-        readonly Slider S;
-        readonly Slider R;
+        readonly Slider A; // ~ Attack time in seconds
+        readonly Slider A_a; // ~ Attack peak amplitude scale(0-1)
+        readonly Slider D; // ~ Decay time in seconds
+        readonly Slider S; // ~ Sustain Amplitude scale (0-1); is NOT relative to attack pead
+        readonly Slider R; // ~ Release time in seconds
 
         public ADSRSliders()
         {
 
 
+            // ~ setting up the grid
+            // ~ columns
             ColumnDefinition Cone = new() { Width = new GridLength(1, GridUnitType.Auto) };
             ColumnDefinition Ctwo = new() { Width = new GridLength(1, GridUnitType.Star) };
-
-
+            // ~ rows
             RowDefinition Rone = new() { Height = new GridLength(1, GridUnitType.Star) };
             RowDefinition Rtwo = new() { Height = new GridLength(1, GridUnitType.Star) };
             RowDefinition Rthree = new() { Height = new GridLength(1, GridUnitType.Star) };
             RowDefinition Rfour = new() { Height = new GridLength(1, GridUnitType.Star) };
             RowDefinition Rfive = new() { Height = new GridLength(1, GridUnitType.Star) };
 
+
+            // ~ adds grid definitions to this as is it extended from the grid control class
             ColumnDefinitions.Add(Cone);
             ColumnDefinitions.Add(Ctwo);
 
@@ -43,6 +46,11 @@ namespace SoundOff
             RowDefinitions.Add(Rfive);
 
 
+            // ~ this is not the best way to define the elements, but was the quickest to figure out while making this for the class
+            // ~ and if it ain't broke...
+
+
+            // ~ very hard to read, but essentailly sets up label font and position and sliders + events
 
             Label Attack = new()
             {
@@ -179,8 +187,12 @@ namespace SoundOff
             SetRow(R, 4);
             Children.Add(R);
 
+
+
         }
 
+
+        // ~ all does the same thing but for each individual slider
         private void Attack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Debug.Assert(sp != null);
@@ -215,6 +227,8 @@ namespace SoundOff
             sp.env.Release_t = e.NewValue;
         }
 
+
+        // ~ a reference to my Sound class so i can modify the ADRS values directly -- again, probably not the best coding practice, but i nneeded somethign quick 
         Sound? sp;
         public void AddSoundPlayer(Sound sp)
         {

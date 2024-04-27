@@ -12,34 +12,36 @@ using System.Windows.Media;
 
 namespace SoundOff
 {
+    // ~ made to have a drop in way for multiple oscilators
     public class Oscillator : ItemsControl
     {
-        static int count = 0;
-        public Sound.Waves WaveForm
+        static int count = 0; // ~ keep track of number of oscilators for naaming purposes
+        public Sound.Waves WaveForm // ~ enum defined in sound specifying the wave type for the oscilator is selected
         {
             get; private set;
-        } = Sound.Waves.SINE;
-        public Button[] ButtonArray
+        } = Sound.Waves.SINE; // ~ default is sine
+        public Button[] ButtonArray // button array so i could more easily do things for each button
         {
             get;
         } = new Button[4];
 
-        public double Vel { get; private set; } = 1;
-        public double PitchShift { get; private set; } = 0;
+        public double Vel { get; private set; } = 1; // ~ value to hold oscilator volume scale
+        public double PitchShift { get; private set; } = 0; // ~ same but for pitch
 
 
+        // ~ below comment block is for furture development notes
 
-
-
-        //if grid doens't extend to bottom of oscillator window, we can add another grid for two sliders
+        //if grid doens't extend to bottom of oscillator window, we can add another grid for two sliders // ~ the grid is as big as it needs to be to hold its inner controls, so i was considering how to use the space
         // -- volume control
         // -- pitch control -- may cause warp clicking
         // we will not have enough time to do differnt modulation types
         //liekly no time for MIDI control either
+
+        // ~ aboce block is old and no longer true
         public Oscillator()
         {
-            Background = Brushes.Brown;
-            count++;
+            Background = Brushes.Brown; // ~ don't this has a viewable affect anymore
+            count++; 
             Grid grid = new();
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(1, System.Windows.GridUnitType.Star) });
@@ -50,7 +52,7 @@ namespace SoundOff
             grid.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
             grid.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
 
-
+            //~ i know i said the array was for more easily doing things for each, but this was here before i added the array, so i didn't change it
             Button Sine = new()
             {
                 Name = "Sine",
@@ -96,6 +98,7 @@ namespace SoundOff
             };
             ButtonArray[3] = Noise;
 
+            // ~ sound be self explanitory, but adds event handler, aset colum, and sets default color of button
             for (int i = 0; i < ButtonArray.Length; i++)
             {
                 Grid.SetColumn(ButtonArray[i], i);
@@ -108,7 +111,7 @@ namespace SoundOff
 
             TextBlock textBlock = new()
             {
-                Text = "Oscillator " + count,
+                Text = "Oscillator " + count, // ~ the soul reason for the count variable
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
@@ -129,7 +132,7 @@ namespace SoundOff
             sliderGrid.RowDefinitions.Add(new RowDefinition());
             sliderGrid.Margin = new Thickness(10);
 
-            Label vL = new()
+            Label vL = new() // ~ velocity slider label
             {
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,
@@ -142,7 +145,7 @@ namespace SoundOff
             sliderGrid.Children.Add(vL);
 
 
-            Label vR = new()
+            Label vR = new() // ~ pitch sldier lable, the name means nothing and was chosed by auto complete which didn't know what i was doing
             {
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,
@@ -158,10 +161,10 @@ namespace SoundOff
 
             Slider vel = new()
             {
-                IsTabStop = false,
-                Maximum = 2,
-                Value = 1,
-                Minimum = 0,
+                IsTabStop = false, // ~ avoids using tab so select it because it was causing conflict with using the arrow keys to control the overall velocity
+                Maximum = 2, // ~ 2 bc wanted to have the option to make  oscillator louder than normal
+                Value = 1, // ~ default
+                Minimum = 0, // ~ 0 = no sound from this one
 
             };
             Grid.SetColumn(vel, 1);
@@ -174,20 +177,20 @@ namespace SoundOff
                 Maximum = 1,
                 Value = 0,
                 Minimum = -1,
-                //TickFrequency = 2.0 / (24*2),
+                //TickFrequency = 2.0 / (24*2), // ~ i wanted to have a tick for every semitone up/down or an octive
                 TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight,
-                //IsSnapToTickEnabled = true,
-                
+                //IsSnapToTickEnabled = true, // ~ but i didn't want to lose fine contoll -- uncomement thse to reenable it
+
             };
-            
+
             Grid.SetColumn(PitchShift, 1);
             Grid.SetRow(PitchShift, 1);
             sliderGrid.Children.Add(PitchShift);
 
-            sliderGrid.Width = Width;
-            sliderGrid.Height =Height;
+            sliderGrid.Width = Width; // ~ tries to set w/h to the oscialor width/height but i don't know if it has a visibale effect
+            sliderGrid.Height = Height;
 
-            PitchShift.ValueChanged += PitchSliderMove;
+            PitchShift.ValueChanged += PitchSliderMove; // ~ adding events for when slider value changes -- self explanitory
             vel.ValueChanged += VelSliderMove;
 
 
@@ -208,13 +211,15 @@ namespace SoundOff
 
         void OnButtonClick(object sender, RoutedEventArgs a)
         {
-            WaveForm = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper());
+            WaveForm = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), ((Button)sender).Name.ToString().ToUpper()); // ~ this was taken from a tutorial somehwere but what is does is b/c the button names match
+                                                                                                                 // ~ the wave type, we parse the name to the wave type and set the waveform to it.
+                                                                                                                 // ~ unsued
 
         }
 
         private void VelSliderMove(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Vel = e.NewValue;
+            Vel = e.NewValue; // ~ function header auto generated, i don't know the event types by heart.
 
         }
 
@@ -227,9 +232,9 @@ namespace SoundOff
         private void WaveButtonDown(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
-            WaveForm = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), b.Name.ToUpper());
+            WaveForm = (Sound.Waves)Enum.Parse(typeof(Sound.Waves), b.Name.ToUpper()); // ~ same as onbuttonclick but actually used
             //MessageBox.Show(b.Name);
-            foreach (var item in ButtonArray)
+            foreach (var item in ButtonArray) // sets button colors to show which one is selected
             {
                 if (item.Name != b.Name)
                     item.Background = Brushes.LightGray;

@@ -35,37 +35,37 @@ public partial class MainWindow : Window
 
 
 
-        sp = new(3, 1000, 0.0);
+        sp = new(3, 1000, 0.0); // ~ set default dound amplitude to 0 so no sound until we want to
 
-        sp.AddOscillator(oscillator1);
+        sp.AddOscillator(oscillator1); // ~ add the oscillators from the XAML files
         sp.AddOscillator(oscillator2);
         sp.AddOscillator(oscillator3);
 
 
 
-        KeyDown += OnKeyDown;
+        KeyDown += OnKeyDown; // ~ events WOOO
         KeyUp += OnKeyUp;
 
-        Graph.SetSoundPlayer(sp);
-        myTimer.Interval = new(0, 0, 0, 0, Graph.updateMS);
-        myTimer.Tick += Graph.DrawLines;
-        myTimer.Start();
+        Graph.SetSoundPlayer(sp); // ~ graph is a visualizer and we want to connect is to a SOUND object to read the samples
+        myTimer.Interval = new(0, 0, 0, 0, Graph.updateMS); // ~ sets graphe update time
+        myTimer.Tick += Graph.DrawLines; // ~ then calls every time the timer exceeds the interval
+        myTimer.Start(); // ~ timer don't start until we start it
 
-        ASDREnvelope.AddSoundPlayer(sp);
+        ASDREnvelope.AddSoundPlayer(sp); // ~ more binding the sound player
 
 
-
+        //looks for midi devices
         if (MidiIn.NumberOfDevices > 0)
         {
-            midiIn = new MidiIn(0);
+            midiIn = new MidiIn(0); //~ uses the first one -- maybe not the best choice, but it worked for waht i needed it too
             midiIn.MessageReceived += MidiIn_MessageReceived;
             midiIn.ErrorReceived += (o, e) => Debug.WriteLine(e);
-            midiIn.Start();
+            midiIn.Start(); // ~ start midi capture
         }
 
         else
         {
-            MessageBox.Show("You can still use the keyboard to play notes.\nTo use a Midi Device, plug one in and restart the process","No Midi Revice Detected");
+            MessageBox.Show("You can still use the keyboard to play notes.\nTo use a Midi Device, plug one in and restart the process","No Midi Revice Detected"); // ~ this can get annoying, but notifies you if no midi device detected
         }
 
     }
@@ -75,24 +75,25 @@ public partial class MainWindow : Window
     private void MidiIn_MessageReceived(object? sender, MidiInMessageEventArgs e)
     {
         //Debug.WriteLine("T:{0}, M:{1},E{2}", e.Timestamp, e.RawMessage, e.MidiEvent);
-        if (MidiEvent.IsNoteOn(e.MidiEvent))
+        if (MidiEvent.IsNoteOn(e.MidiEvent)) // ~ if we have a not on event we can treat is like one
         {
-            if (((NoteOnEvent)e.MidiEvent).Velocity != 0)
+            if (((NoteOnEvent)e.MidiEvent).Velocity != 0) // ~ turn sound off if veloticy = 0
             {
-                CurrentMidiNote = ((NoteOnEvent)e.MidiEvent).NoteNumber;
+                CurrentMidiNote = ((NoteOnEvent)e.MidiEvent).NoteNumber; // ~ sets most recent note because it feels better to use that was
                 sp.PlaySound(((NoteOnEvent)e.MidiEvent).NoteNumber, ((NoteOnEvent)e.MidiEvent).Velocity);
             }
-            else if (CurrentMidiNote == ((NoteOnEvent)e.MidiEvent).NoteNumber)
+            else if (CurrentMidiNote == ((NoteOnEvent)e.MidiEvent).NoteNumber) // ~ only turn off if the most recent note got release -- avoids needing to time button presses perfectly to switch notes
             {
                 sp.StopSound();
             }
         }
-        else if (MidiEvent.IsNoteOff(e.MidiEvent) && (CurrentMidiNote == ((NoteEvent)e.MidiEvent).NoteNumber))
+        else if (MidiEvent.IsNoteOff(e.MidiEvent) && (CurrentMidiNote == ((NoteEvent)e.MidiEvent).NoteNumber)) // ~ if we get a note off event, and it's the most recent note, then turn off
         {
             sp.StopSound();
         }
     }
 
+    // ~ keyboard use when no midi (or even with midi keyboard is you want)
     private Key currentKey;
 
     int octaveShift = 0;
@@ -104,20 +105,20 @@ public partial class MainWindow : Window
     int playKey = 128;
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Z || e.Key == Key.X || e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.LeftShift || e.Key == Key.RightShift)
+        if (e.Key == Key.Z || e.Key == Key.X || e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.LeftShift || e.Key == Key.RightShift) // ~ control keys z-x shift octive | up/down arrow change velocity | shift keys make velocity switching faster
         {
             switch (e.Key)
             {
                 case Key.X:
-                    if (77 + octaveShift * octiveSize < 127)
+                    if (77 + octaveShift * octiveSize < 127) // ~ don't go beyond bounds please (don't go too high)
                         octaveShift++;
                     break;
                 case Key.Z:
-                    if (60 + octaveShift * octiveSize > 0)
+                    if (60 + octaveShift * octiveSize > 0) // ~ don't go too low
                         octaveShift--;
                     break;
                 case Key.Up:
-                    if (velocity < 127 && !shiftDown)
+                    if (velocity < 127 && !shiftDown) // ~ same but for velocity
                         velocity++;
                     else if (velocity + 10 < 127 && shiftDown)
                         velocity += 10;
@@ -141,11 +142,11 @@ public partial class MainWindow : Window
             }
             return;
         }
-        if (e.Key == currentKey)
+        if (e.Key == currentKey) // ~ don't press key again if it's being held down
         {
             return;
         }
-        switch (e.Key)
+        switch (e.Key) //~  yuck -- piano like layout -- 60 = c
         {
             case Key.A:
                 playKey = 60 + (octaveShift * octiveSize);
@@ -204,7 +205,7 @@ public partial class MainWindow : Window
             default:
                 return;
         }
-        if (playKey > 127)
+        if (playKey > 127) //don't play too high notes
             return;
         sp.PlaySound(playKey, velocity);
         currentKey = e.Key;
@@ -217,14 +218,14 @@ public partial class MainWindow : Window
         }
         if (e.Key == currentKey)
         {
-            currentKey = Key.None;
+            currentKey = Key.None; // upon release, stop and no current key
             sp.StopSound();
         }
     }
 
 
 
-
+    // ~ old stuff, very unsued, but i don't want to bury the corpse yet
 
 
     //middle C is 60 MIDI
