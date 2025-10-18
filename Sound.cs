@@ -49,14 +49,22 @@ namespace SoundOff
                 int io = 0;
                 foreach (Oscillator os in OSInfo)
                 {
-                    double sine = EnvelopeRamp(time) * OscillatorVelocityShift(Amplitude, os) * WaveTypes[(int)os.WaveForm](2 * Math.PI * (Freqency + OscilatorFrequencyOffSet(Freqency, os)) * time);
+                    double sine = env.EnvelopeRamp(time) * OscillatorVelocityShift(Amplitude, os) * WaveTypes[(int)os.WaveForm](2 * Math.PI * (Freqency + OscilatorFrequencyOffSet(Freqency, os)) * time);
+                    double sine_prev = 0;
+                    if(env_prev != null)
+                        sine_prev= env_prev.EnvelopeRamp(time) * OscillatorVelocityShift(Amplitude_old, os) * WaveTypes[(int)os.WaveForm](2 * Math.PI * (Freqency_old + OscilatorFrequencyOffSet(Freqency_old, os)) * time);
 
                     io += (short)Math.Round(sine * (Math.Pow(2, 15) - 1));
+                    io += (short)Math.Round(sine_prev * (Math.Pow(2, 15) - 1));
                 }
                 time += 1.0 / SampleRate;
                 short Trunc = OSInfo.Count > 0 ? (short)(io / OSInfo.Count) : (short)0;
                 buffer[i * 2] = (byte)(Trunc & 0x00ff);
                 buffer[i * 2 + 1] = (byte)((Trunc & 0xff00) >> 8);
+                if (env_prev!=null && time > env_prev.triggerOff_t + env_prev.Release_t)
+                {
+                    env_prev = null;
+                }
 
                 if (AvailableSamples.Count < SampleQueueBufferLength)
                 {
@@ -70,6 +78,7 @@ namespace SoundOff
                 }
 
             }
+            //Debug.WriteLine("{0}, {1}, {2}", env_prev.triggerOn_t, env_prev.triggerOff_t, time);
             //Debug.WriteLine("{0},{1},{2}", (Freqency + OscilatorFrequencyOffSet(Freqency, OSInfo[0])), OscilatorFrequencyOffSet(Freqency, OSInfo[0]), OSInfo[0].PitchShift);
             return count;
         }
@@ -102,6 +111,8 @@ namespace SoundOff
         {
 
             env = new Envelope();
+            //env_prev = new Envelope(env);
+
 
             OSInfo = new List<Oscillator>(OscillatorNumber);
 
@@ -127,6 +138,11 @@ namespace SoundOff
             {
                 return;
             }
+
+            StopSound();
+
+
+            env = new Envelope(env_prev!);
             env.triggerOn_t = time;
             env.triggerOff_t = 0;
 
@@ -140,12 +156,21 @@ namespace SoundOff
         public void StopSound()
         {
 
+
             env.triggerOff_t = time;
-            AvailableSamples.Clear();
+
+            env_prev = env;
+
+            Freqency_old = Freqency;
+            Amplitude_old = Amplitude;
+            //AvailableSamples.Clear();
         }
 
         readonly List<Oscillator> OSInfo;
         public Envelope env;
+        public Envelope? env_prev;
+        private double Freqency_old { get; set; }
+        private double Amplitude_old;
 
         public class Envelope
         {
@@ -176,11 +201,76 @@ namespace SoundOff
                 triggerOff_t = 0;
 
             }
+            public Envelope(Envelope copy)
+            {
+                Attack_t = copy.Attack_t;
+                Decay_t = copy.Decay_t;
+                Release_t = copy.Release_t;
+
+                Sustain_A = copy.Sustain_A;
+                Attack_A = copy.Attack_A;
+
+                //CurrentEnteringA = copy.CurrentEnteringA;
+                //CurrentAttackA = copy.CurrentAttackA;
+                //CurrentExitingA = copy.CurrentExitingA;
+
+                triggerOn_t = 0;
+                triggerOff_t = 0;
 
 
+
+
+            }
+            public double EnvelopeRamp(double t)
+            {
+                double RelT;
+                double oooo;
+                if (triggerOn_t > triggerOff_t)
+                {
+                    RelT = t - triggerOn_t;
+                    if (RelT < 0)
+                    {
+                        oooo = 1;
+                    }
+                    else if (RelT <= Attack_t && Attack_t != 0)
+                    {
+                        oooo = double.Lerp(CurrentExitingA, Attack_A, RelT / Attack_t);
+                        CurrentAttackA = oooo;
+                    }
+                    else if (RelT <= Attack_t + Decay_t && Attack_t + Decay_t != 0)
+                    {
+                        oooo = double.Lerp(CurrentAttackA, Sustain_A, RelT / (Attack_t + Decay_t));
+                    }
+                    else
+                    {
+                        oooo = Sustain_A;
+                    }
+                    CurrentEnteringA = oooo;
+                }
+                else
+                {
+                    RelT = t - triggerOff_t;
+                    if (RelT < 0)
+                    {
+                        oooo = 1;
+                    }
+                    else if (RelT <= Release_t)
+                    {
+                        oooo = double.Lerp(CurrentEnteringA, 0, RelT / Release_t);
+
+                    }
+                    else
+                    {
+                        oooo = 0;
+                    }
+                    CurrentExitingA = oooo;
+                }
+
+                return oooo;
+
+            }
 
         }
-
         public enum Waves
         {
             SINE,
@@ -189,54 +279,6 @@ namespace SoundOff
             NOISE,
         }
 
-        private double EnvelopeRamp(double t)
-        {
-            double RelT;
-            double oooo;
-            if (env.triggerOn_t > env.triggerOff_t)
-            {
-                RelT = t - env.triggerOn_t;
-                if (RelT < 0)
-                {
-                    oooo = 1;
-                }
-                else if (RelT <= env.Attack_t && env.Attack_t != 0)
-                {
-                    oooo = double.Lerp(env.CurrentExitingA, env.Attack_A, RelT / env.Attack_t);
-                    env.CurrentAttackA = oooo;
-                }
-                else if (RelT <= env.Attack_t + env.Decay_t && env.Attack_t + env.Decay_t != 0)
-                {
-                    oooo = double.Lerp(env.CurrentAttackA, env.Sustain_A, RelT / (env.Attack_t + env.Decay_t));
-                }
-                else
-                {
-                    oooo = env.Sustain_A;
-                }
-                env.CurrentEnteringA = oooo;
-            }
-            else
-            {
-                RelT = t - env.triggerOff_t;
-                if (RelT < 0)
-                {
-                    oooo = 1;
-                }
-                else if (RelT <= env.Release_t)
-                {
-                    oooo = double.Lerp(env.CurrentEnteringA, 0, RelT / env.Release_t);
-
-                }
-                else
-                {
-                    oooo = 0;
-                }
-                env.CurrentExitingA = oooo;
-            }
-
-            return oooo;
-
-        }
 
 
         public void AddOscillator(Oscillator oscillator)
@@ -286,7 +328,7 @@ namespace SoundOff
 
         private static float KeyToFreq(int K)
         {
-            return 400f * (float)Math.Pow(2f, (K - 69) / 12f);
+            return 440f * (float)Math.Pow(2f, (K - 69) / 12f);
 
         }
 
