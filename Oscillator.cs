@@ -167,14 +167,16 @@ namespace SoundOff
             Grid.SetColumn(vel, 1);
             Grid.SetRow(vel, 0);
             sliderGrid.Children.Add(vel);
-
+            
             Slider PitchShift = new()
             {
                 IsTabStop = false,
                 Maximum = 1,
                 Value = 0,
                 Minimum = -1,
-                //TickFrequency = 2.0 / (24*2),
+                SmallChange=1/12.0,
+                IsMoveToPointEnabled=true,
+                TickFrequency = 1/12.0,
                 TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight,
                 //IsSnapToTickEnabled = true,
                 
