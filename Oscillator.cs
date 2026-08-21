@@ -135,7 +135,7 @@ namespace SoundOff
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Content = "Vel",
+                Content = "Vol",
             };
             Grid.SetColumn(vL, 0);
             Grid.SetRow(vL, 0);

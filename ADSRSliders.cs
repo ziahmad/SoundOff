@@ -64,6 +64,7 @@ namespace SoundOff
                 Value = 0.01,
                 Maximum = 2,
                 VerticalAlignment = VerticalAlignment.Center,
+                IsMoveToPointEnabled=true,
 
             };
             A.ValueChanged += Attack_ValueChanged;
@@ -74,7 +75,7 @@ namespace SoundOff
 
             Label Attack_Peak = new()
             {
-                Content = "Attack Peak",
+                Content = "Volume",
                 FontWeight = FontWeights.Bold,
                 Foreground = Brushes.White,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -92,6 +93,7 @@ namespace SoundOff
                 Value = 1.0,
                 Maximum = 1,
                 VerticalAlignment = VerticalAlignment.Center,
+                IsMoveToPointEnabled=true,
             };
             A_a.ValueChanged += Attack_Amplitude_ValueChanged;
             SetColumn(A_a, 1);
@@ -119,6 +121,7 @@ namespace SoundOff
                 Value = 0.01,
                 Maximum = 2,
                 VerticalAlignment = VerticalAlignment.Center,
+                IsMoveToPointEnabled=true,
             };
             D.ValueChanged += Decay_ValueChanged;
             SetColumn(D, 1);
@@ -146,6 +149,7 @@ namespace SoundOff
                 Value = 0.8,
                 Maximum = 1,
                 VerticalAlignment = VerticalAlignment.Center,
+                IsMoveToPointEnabled=true,
             };
             S.ValueChanged += Sustain_ValueChanged;
             SetColumn(S, 1);
