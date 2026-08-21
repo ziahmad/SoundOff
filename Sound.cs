@@ -141,7 +141,7 @@ namespace SoundOff
         {
 
             env.triggerOff_t = time;
-            AvailableSamples.Clear();
+            // AvailableSamples.Clear();
         }
 
         readonly List<Oscillator> OSInfo;
@@ -207,11 +207,11 @@ namespace SoundOff
                 }
                 else if (RelT <= env.Attack_t + env.Decay_t && env.Attack_t + env.Decay_t != 0)
                 {
-                    oooo = double.Lerp(env.CurrentAttackA, env.Sustain_A, RelT / (env.Attack_t + env.Decay_t));
+                    oooo = double.Lerp(env.CurrentAttackA, env.Sustain_A*env.Attack_A, RelT / (env.Attack_t + env.Decay_t));
                 }
                 else
                 {
-                    oooo = env.Sustain_A;
+                    oooo = env.Sustain_A*env.Attack_A;
                 }
                 env.CurrentEnteringA = oooo;
             }
